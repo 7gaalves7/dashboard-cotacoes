@@ -29,30 +29,53 @@ st.markdown(
 # ---------------------------------------------------------
 # Funções de Dados (ETL)
 # ---------------------------------------------------------
+# ---------------------------------------------------------
+# Funções de Dados (ETL) - Versão Corrigida para a Nuvem
+# ---------------------------------------------------------
 @st.cache_data(ttl=30)
 def buscar_dados_cotacoes():
     url = "https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL,GBP-BRL,CAD-BRL"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+    }
+
     try:
-        response = requests.get(url, timeout=5)
-        data = response.json()
+        response = requests.get(url, headers=headers, timeout=10)
 
-        lista_moedas = []
-        for chave, info in data.items():
-            lista_moedas.append(
-                {
-                    "Código": info["code"],
-                    "Nome": info["name"].split("/")[0],
-                    "Par": info["name"],
-                    "Valor Atual (R$)": float(info["bid"]),
-                    "Variação (%)": float(info["pctChange"]),
-                    "Máxima (R$)": float(info["high"]),
-                    "Mínima (R$)": float(info["low"]),
-                    "Última Atualização": info["create_date"],
-                }
-            )
+        # Verifica se a requisição deu certo (Status 200)
+        if response.status_code == 200:
+            data = response.json()
 
-        df = pd.DataFrame(lista_moedas)
-        return df
+            # Garante que 'data' é realmente um dicionário de cotações
+            if isinstance(data, dict):
+                lista_moedas = []
+                for chave, info in data.items():
+                    if isinstance(info, dict):
+                        lista_moedas.append(
+                            {
+                                "Código": info.get("code", ""),
+                                "Nome": info.get("name", "").split("/")[0],
+                                "Par": info.get("name", ""),
+                                "Valor Atual (R$)": float(
+                                    info.get("bid", 0)
+                                ),
+                                "Variação (%)": float(
+                                    info.get("pctChange", 0)
+                                ),
+                                "Máxima (R$)": float(info.get("high", 0)),
+                                "Mínima (R$)": float(info.get("low", 0)),
+                                "Última Atualização": info.get(
+                                    "create_date", ""
+                                ),
+                            }
+                        )
+                return pd.DataFrame(lista_moedas)
+
+        st.error(
+            f"A API respondeu com código de status: {response.status_code}"
+        )
+        return pd.DataFrame()
+
     except Exception as e:
         st.error(f"Erro ao conectar com a API: {e}")
         return pd.DataFrame()
