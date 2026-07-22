@@ -36,9 +36,9 @@ O projeto aplica conceitos de **Engenharia de Dados (ETL)**, consumo de APIs RES
 
 ---
 
-## 🏗️ Estrutura do Projeto
+## Desenvolvido por Gabriel Alves Macedo Queiroz
+Estudante de Ciência de Dados e Inteligência Artificial na PUC Goiás.
 
-```text
-├── app.py              # Código principal da aplicação (ETL + Layout Streamlit)
-├── requirements.txt    # Dependências do projeto para deploy na nuvem
-└── README.md           # Documentação do repositório
+LinkedIn: [https://linkedin.com/in/gabriel-alves-277a76361](https://linkedin.com/in/gabriel-alves-277a76361)
+GitHub:   [https://github.com/7gaalves7](https://github.com/7gaalves7)
+E-mail:   7gaalves7.data@gmail.com
