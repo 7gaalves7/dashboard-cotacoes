@@ -32,7 +32,7 @@ st.markdown(
 # ---------------------------------------------------------
 # Funções de Dados (ETL) - Versão Corrigida para a Nuvem
 # ---------------------------------------------------------
-@st.cache_data(ttl=30)
+@st.cache_data(ttl=300)
 def buscar_dados_cotacoes():
     url = "https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL,GBP-BRL,CAD-BRL"
     headers = {
