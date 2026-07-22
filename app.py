@@ -35,7 +35,10 @@ st.markdown(
 # ---------------------------------------------------------
 # Funções de Dados (ETL) com Cache Longo e Fallback
 # ---------------------------------------------------------
-@st.cache_data(ttl=300)  # Cache de 5 minutos para evitar limite 429
+# ---------------------------------------------------------
+# Funções de Dados (ETL) - Versão Limpa sem st.* dentro do Cache
+# ---------------------------------------------------------
+@st.cache_data(ttl=300)
 def buscar_dados_cotacoes():
     url = "https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL,GBP-BRL,CAD-BRL"
     headers = {
@@ -72,10 +75,9 @@ def buscar_dados_cotacoes():
                 return pd.DataFrame(lista_moedas)
 
     except Exception:
-        pass  # Se der qualquer erro ou bloqueio, cai no fallback abaixo
+        pass
 
-    # --- DADOS RESERVA (Fallback) se a API limitar a nuvem ---
-    st.toast("⚠️ Excesso de requisições na API. Exibindo dados de backup.", icon="ℹ️")
+    # --- FALLBACK (Retorna dados estáticos se a API falhar) ---
     dados_fallback = [
         {
             "Código": "USD",
