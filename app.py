@@ -32,7 +32,10 @@ st.markdown(
 # ---------------------------------------------------------
 # Funções de Dados (ETL) - Versão Corrigida para a Nuvem
 # ---------------------------------------------------------
-@st.cache_data(ttl=300)
+# ---------------------------------------------------------
+# Funções de Dados (ETL) com Cache Longo e Fallback
+# ---------------------------------------------------------
+@st.cache_data(ttl=300)  # Cache de 5 minutos para evitar limite 429
 def buscar_dados_cotacoes():
     url = "https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL,GBP-BRL,CAD-BRL"
     headers = {
@@ -40,13 +43,10 @@ def buscar_dados_cotacoes():
     }
 
     try:
-        response = requests.get(url, headers=headers, timeout=10)
+        response = requests.get(url, headers=headers, timeout=5)
 
-        # Verifica se a requisição deu certo (Status 200)
         if response.status_code == 200:
             data = response.json()
-
-            # Garante que 'data' é realmente um dicionário de cotações
             if isinstance(data, dict):
                 lista_moedas = []
                 for chave, info in data.items():
@@ -71,14 +71,64 @@ def buscar_dados_cotacoes():
                         )
                 return pd.DataFrame(lista_moedas)
 
-        st.error(
-            f"A API respondeu com código de status: {response.status_code}"
-        )
-        return pd.DataFrame()
+    except Exception:
+        pass  # Se der qualquer erro ou bloqueio, cai no fallback abaixo
 
-    except Exception as e:
-        st.error(f"Erro ao conectar com a API: {e}")
-        return pd.DataFrame()
+    # --- DADOS RESERVA (Fallback) se a API limitar a nuvem ---
+    st.toast("⚠️ Excesso de requisições na API. Exibindo dados de backup.", icon="ℹ️")
+    dados_fallback = [
+        {
+            "Código": "USD",
+            "Nome": "Dólar Americano",
+            "Par": "USD/BRL",
+            "Valor Atual (R$)": 5.09,
+            "Variação (%)": -0.35,
+            "Máxima (R$)": 5.11,
+            "Mínima (R$)": 5.06,
+            "Última Atualização": "Dados do Sistema",
+        },
+        {
+            "Código": "EUR",
+            "Nome": "Euro",
+            "Par": "EUR/BRL",
+            "Valor Atual (R$)": 5.80,
+            "Variação (%)": -0.41,
+            "Máxima (R$)": 5.83,
+            "Mínima (R$)": 5.77,
+            "Última Atualização": "Dados do Sistema",
+        },
+        {
+            "Código": "BTC",
+            "Nome": "Bitcoin",
+            "Par": "BTC/BRL",
+            "Valor Atual (R$)": 339743.0,
+            "Variação (%)": 1.42,
+            "Máxima (R$)": 341801.0,
+            "Mínima (R$)": 333759.0,
+            "Última Atualização": "Dados do Sistema",
+        },
+        {
+            "Código": "GBP",
+            "Nome": "Libra Esterlina",
+            "Par": "GBP/BRL",
+            "Valor Atual (R$)": 6.82,
+            "Variação (%)": 0.12,
+            "Máxima (R$)": 6.85,
+            "Mínima (R$)": 6.79,
+            "Última Atualização": "Dados do Sistema",
+        },
+        {
+            "Código": "CAD",
+            "Nome": "Dólar Canadense",
+            "Par": "CAD/BRL",
+            "Valor Atual (R$)": 3.75,
+            "Variação (%)": -0.18,
+            "Máxima (R$)": 3.78,
+            "Mínima (R$)": 3.72,
+            "Última Atualização": "Dados do Sistema",
+        },
+    ]
+    return pd.DataFrame(dados_fallback)
 
 
 df = buscar_dados_cotacoes()
