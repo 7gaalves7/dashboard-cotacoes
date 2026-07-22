@@ -43,41 +43,11 @@ O projeto aplica conceitos de **Engenharia de Dados (ETL)**, consumo de APIs RES
 ├── requirements.txt    # Dependências do projeto para deploy na nuvem
 └── README.md           # Documentação do repositório
 
-Como Executar o Projeto Localmente
+## 👤 Autor
 
-    Clone este repositório:
-    Bash
-
-    git clone [https://github.com/7gaalves7/dashboard-cotacoes.git](https://github.com/7gaalves7/dashboard-cotacoes.git)
-    cd dashboard-cotacoes
-
-    Crie e ative um ambiente virtual:
-    Bash
-
-    python -m venv venv
-    # No Windows (PowerShell):
-    .\venv\Scripts\Activate.ps1
-    # No Windows (CMD):
-    venv\Scripts\activate.bat
-
-    Instale as dependências:
-    Bash
-
-    pip install -r requirements.txt
-
-    Execute a aplicação:
-    Bash
-
-    streamlit run app.py
-
-👤 Autor
-
-Desenvolvido por Gabriel Alves Macedo Queiroz
-
+Desenvolvido por **Gabriel Alves Macedo Queiroz**  
 Estudante de Ciência de Dados e Inteligência Artificial na PUC Goiás.
 
-    LinkedIn: Gabriel Alves
-
-    GitHub: @7gaalves7
-
-    E-mail: 7gaalves7.data@gmail.com
+* **LinkedIn:** [Gabriel Alves](https://linkedin.com/in/gabriel-alves-277a76361)
+* **GitHub:** [@7gaalves7](https://github.com/7gaalves7)
+* **E-mail:** 7gaalves7.data@gmail.com
